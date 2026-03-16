@@ -2,51 +2,85 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Snooker Game</title>
+<title>Billiard Game</title>
 <style>
-body{margin:0;background:#0b5e20;display:flex;justify-content:center;align-items:center;height:100vh}
-canvas{background:#1b8f3a}
-</style>
-</head>
-<body>
-<canvas id="game" width="800" height="400"></canvas>
-
-<script>
-const canvas=document.getElementById("game");
-const ctx=canvas.getContext("2d");
-
-let balls=[
-{x:200,y:200,r:10,vx:0,vy:0,color:"white"},
-{x:500,y:200,r:10,vx:0,vy:0,color:"red"}
-];
-
-canvas.onclick=e=>{
-balls[0].vx=5;
-balls[0].vy=(Math.random()*4)-2;
+body{
+margin:0;
+background:#0b5e20;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+font-family:Arial;
 }
 
+canvas{
+background:#1b8f3a;
+border:8px solid #3b2a19;
+border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="game" width="900" height="500"></canvas>
+
+<script>
+
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+let balls = [
+{x:200,y:250,r:10,vx:0,vy:0,color:"white"},
+{x:600,y:250,r:10,vx:0,vy:0,color:"red"}
+];
+
+let aiming=false;
+
+canvas.addEventListener("mousedown",()=>aiming=true);
+canvas.addEventListener("mouseup",(e)=>{
+aiming=false;
+
+let rect=canvas.getBoundingClientRect();
+let mx=e.clientX-rect.left;
+let my=e.clientY-rect.top;
+
+let dx=balls[0].x-mx;
+let dy=balls[0].y-my;
+
+balls[0].vx=dx*0.05;
+balls[0].vy=dy*0.05;
+});
+
 function update(){
-ctx.clearRect(0,0,800,400);
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
 
 balls.forEach(b=>{
+
 b.x+=b.vx;
 b.y+=b.vy;
+
 b.vx*=0.99;
 b.vy*=0.99;
 
-if(b.x<10||b.x>790)b.vx*=-1;
-if(b.y<10||b.y>390)b.vy*=-1;
+if(b.x<b.r||b.x>canvas.width-b.r)b.vx*=-1;
+if(b.y<b.r||b.y>canvas.height-b.r)b.vy*=-1;
 
 ctx.beginPath();
 ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
 ctx.fillStyle=b.color;
 ctx.fill();
+
 });
 
 requestAnimationFrame(update);
 }
 
 update();
+
 </script>
+
 </body>
 </html>
