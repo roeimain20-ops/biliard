@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Snooker Game</title>
+<style>
+body{margin:0;background:#0b5e20;display:flex;justify-content:center;align-items:center;height:100vh}
+canvas{background:#1b8f3a}
+</style>
+</head>
+<body>
+<canvas id="game" width="800" height="400"></canvas>
+
+<script>
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+
+let balls=[
+{x:200,y:200,r:10,vx:0,vy:0,color:"white"},
+{x:500,y:200,r:10,vx:0,vy:0,color:"red"}
+];
+
+canvas.onclick=e=>{
+balls[0].vx=5;
+balls[0].vy=(Math.random()*4)-2;
+}
+
+function update(){
+ctx.clearRect(0,0,800,400);
+
+balls.forEach(b=>{
+b.x+=b.vx;
+b.y+=b.vy;
+b.vx*=0.99;
+b.vy*=0.99;
+
+if(b.x<10||b.x>790)b.vx*=-1;
+if(b.y<10||b.y>390)b.vy*=-1;
+
+ctx.beginPath();
+ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
+ctx.fillStyle=b.color;
+ctx.fill();
+});
+
+requestAnimationFrame(update);
+}
+
+update();
+</script>
+</body>
+</html>
